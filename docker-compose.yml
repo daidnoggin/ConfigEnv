@@ -1,0 +1,10 @@
+version: '3.7'
+services:
+  unittest:
+    build:
+      context: ./
+      dockerfile: Dockerfile.unittest
+  build:
+    build:
+      context: ./
+      dockerfile: Dockerfile.build
