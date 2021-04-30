@@ -4,7 +4,7 @@ services:
     build:
       context: ./
       dockerfile: Dockerfile.unittest
-  build:
+  pack:
     build:
       context: ./
       dockerfile: Dockerfile.build

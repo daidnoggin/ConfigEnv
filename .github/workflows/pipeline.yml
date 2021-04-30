@@ -1,0 +1,48 @@
+name: Build
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - v*
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build
+        run: |
+          docker-compose build --progress plain pack
+      - name: Store Artifact
+        if: github.head_ref == 'main'
+        run: |
+          docker create -ti --name CloudEnv CloudEnv_CloudEnv bash
+          docker cp CloudEnv:/build/ConfigEnv/bin/Release/ConfigEnv.1.0.0.nupkg ConfigEnv.1.0.0.nupkg
+          docker rm CloudEnv
+      - uses: actions/upload-artifact
+        if: github.head_ref == 'main'
+        with:
+          name: ConfigEnv.1.0.0.nupkg
+          path: ConfigEnv.1.0.0.nupkg
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Unit Test
+        run: |
+          docker-compose build --progress plain unittest
+  release:
+    needs: [build, test]
+    runs-on: ubuntu-latest
+    if: github.head_ref == 'main'
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/download-artifact
+        with:
+          name: ConfigEnv.1.0.0.nupkg
+          path: ConfigEnv.1.0.0.nupkg
+      - name: Release
+        run: |
+          ls -la
