@@ -16,13 +16,14 @@ jobs:
         run: |
           docker-compose build --progress plain pack
       - name: Store Artifact
-        if: github.head_ref == 'main'
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: |
-          docker create -ti --name CloudEnv CloudEnv_CloudEnv bash
-          docker cp CloudEnv:/build/ConfigEnv/bin/Release/ConfigEnv.1.0.0.nupkg ConfigEnv.1.0.0.nupkg
-          docker rm CloudEnv
-      - uses: actions/upload-artifact
-        if: github.head_ref == 'main'
+          ls -la
+          docker create -ti --name configenv configenv_pack bash
+          docker cp configenv:/build/ConfigEnv/bin/Release/ConfigEnv.1.0.0.nupkg ConfigEnv.1.0.0.nupkg
+          docker rm configenv
+      - uses: actions/upload-artifact@master
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         with:
           name: ConfigEnv.1.0.0.nupkg
           path: ConfigEnv.1.0.0.nupkg
@@ -36,13 +37,13 @@ jobs:
   release:
     needs: [build, test]
     runs-on: ubuntu-latest
-    if: github.head_ref == 'main'
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/download-artifact
+      - uses: actions/download-artifact@master
         with:
           name: ConfigEnv.1.0.0.nupkg
-          path: ConfigEnv.1.0.0.nupkg
       - name: Release
         run: |
           ls -la
+          dotnet nuget push "ConfigEnv.1.0.0.nupkg" --api-key ${{ secrets.GITHUB_TOKEN }} --source "https://nuget.pkg.github.com/daidnoggin/index.json"
