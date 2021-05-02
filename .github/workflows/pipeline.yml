@@ -1,38 +1,45 @@
-name: Build
+name: Build, Test and Release
 on:
   push:
     branches:
       - main
-    tags:
-      - v*
   pull_request:
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.nbgv.outputs.SemVer2 }}
     steps:
       - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: NBGV
+        id: nbgv
+        uses: dotnet/nbgv@master
+        with:
+          setAllVars: true
+          setCommonVars: true
+
       - name: Build
         run: |
+          export RELEASE_VERSION="${{ env.NBGV_SemVer2 }}"
           docker-compose build --progress plain pack
-      - name: Set Release Version
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-        run: |
-          echo $GITHUB_ENV
-          cat $GITHUB_ENV
-          echo $GITHUB_REF
-      - name: Store Artifact
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+
+      - name: Create Artifact
         run: |
           ls -la
+          export RELEASE_VERSION="${{ env.NBGV_SemVer2 }}"
           docker create -ti --name configenv configenv_pack bash
-          docker cp configenv:/build/ConfigEnv/bin/Release/ConfigEnv.1.0.0.nupkg ConfigEnv.1.0.0.nupkg
+          docker cp configenv:/build/ConfigEnv/bin/Release/ConfigEnv.${RELEASE_VERSION}.nupkg ConfigEnv.${RELEASE_VERSION}.nupkg
           docker rm configenv
+
       - uses: actions/upload-artifact@master
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         with:
-          name: ConfigEnv.1.0.0.nupkg
-          path: ConfigEnv.1.0.0.nupkg
+          name: ConfigEnv
+          path: '*.nupkg'
+
   test:
     runs-on: ubuntu-latest
     steps:
@@ -46,10 +53,24 @@ jobs:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     steps:
       - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
       - uses: actions/download-artifact@master
         with:
-          name: ConfigEnv.1.0.0.nupkg
-      - name: Release
+          name: ConfigEnv
+
+      - name: GitHub Release
+        uses: actions/create-release@v1
+        env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+            tag_name: ${{ needs.build.outputs.version }}
+            release_name: ${{ needs.build.outputs.version }}
+            body: |
+              ${{ needs.build.outputs.version }} Released
+
+      - name: GitHub NuGet Release
         run: |
           ls -la
           dotnet nuget push "ConfigEnv.1.0.0.nupkg" --api-key ${{ secrets.GITHUB_TOKEN }} --source "https://nuget.pkg.github.com/daidnoggin/index.json"
