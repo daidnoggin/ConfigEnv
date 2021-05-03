@@ -1,6 +1,7 @@
 FROM mcr.microsoft.com/dotnet/core/sdk:3.1-alpine as builder
+ARG RELEASE_VERSION=0.0.0-pre
 COPY /src/ConfigEnv /build/ConfigEnv
 WORKDIR /build/ConfigEnv
 RUN dotnet restore
 RUN dotnet build
-RUN dotnet pack --configuration Release
+RUN dotnet pack --configuration Release -p:Version=${RELEASE_VERSION}
