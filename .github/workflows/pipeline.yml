@@ -73,4 +73,4 @@ jobs:
       - name: GitHub NuGet Release
         run: |
           ls -la
-          dotnet nuget push "ConfigEnv.1.0.0.nupkg" --api-key ${{ secrets.GITHUB_TOKEN }} --source "https://nuget.pkg.github.com/daidnoggin/index.json"
+          dotnet nuget push "ConfigEnv.${{ needs.build.outputs.version }}.nupkg" --api-key ${{ secrets.GITHUB_TOKEN }} --source "https://nuget.pkg.github.com/daidnoggin/index.json"
