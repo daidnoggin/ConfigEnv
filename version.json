@@ -4,7 +4,7 @@
     "publicReleaseRefSpec": [
       "^refs/heads/main$",
       "^refs/heads/preview/.*",
-      "^refs/heads/rel/\\d+\\.\\d+\\.\\d+",
+      "^refs/heads/rel/\\d+\\.\\d+\\.\\d+"
     ],
     "nugetPackageVersion":{
       "semVer": 2
