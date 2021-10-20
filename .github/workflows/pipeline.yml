@@ -46,6 +46,7 @@ jobs:
       - name: Unit Test
         run: |
           docker-compose build --progress plain unittest
+
   release:
     needs: [build, test]
     runs-on: ubuntu-latest
