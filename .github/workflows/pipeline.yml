@@ -62,4 +62,4 @@ jobs:
 
       - name: NuGet Release
         run: |
-          dotnet nuget push "ConfigEnv.${{ needs.build.outputs.version }}.nupkg" --api-key ${{ secrets.NUGET_TOKEN }}
+          dotnet nuget push "ConfigEnv.${{ needs.build.outputs.version }}.nupkg" --api-key ${{ secrets.NUGET_TOKEN }} --source nuget.org
