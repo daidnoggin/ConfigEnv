@@ -19,5 +19,5 @@ AWS_SSM_MY_SECRET='/application/mysecret'
 var secret = Config.Instance.GetEnv("AWS_SSM_MY_SECRET");
 ```
 
-The application retrives the secret directly
+The application retrives the secret directly from SSM Parameter Store
 
