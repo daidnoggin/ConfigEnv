@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/core/sdk:3.1-alpine as builder
+FROM mcr.microsoft.com/dotnet/sdk:6.0-alpine as builder
 ARG RELEASE_VERSION=0.0.0-pre
 COPY /src/ConfigEnv /build/ConfigEnv
 WORKDIR /build/ConfigEnv
