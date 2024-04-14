@@ -38,12 +38,12 @@ namespace ConfigEnv
             if (key.StartsWith(AWS_SSM))
             {
                 string ssmKey = key.Substring(AWS_SSM.Length);
-                return await GetFromSSMAsync(ssmKey);
+                return await GetFromSsmAsync(ssmKey);
             }
             return Environment.GetEnvironmentVariable(key) ?? defaultValue;
         }
 
-        public async Task<string> GetFromSSMAsync(string key, string defaultValue = "")
+        private async Task<string> GetFromSsmAsync(string key, string defaultValue = "")
         {
             return (await _ssmClient!.GetParameterAsync(new GetParameterRequest { Name = key, WithDecryption = true })).Parameter.Value;
         }

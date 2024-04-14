@@ -1,8 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    <LangVersion>8.0</LangVersion>
+    <TargetFramework>net8.0</TargetFramework>
+    <LangVersion>12</LangVersion>
     <Nullable>enable</Nullable>
     <AssemblyName>ConfigEnv</AssemblyName>
   </PropertyGroup>
@@ -10,7 +10,7 @@
   <PropertyGroup>
     <Authors>daidnoggin</Authors>
     <PackageId>ConfigEnv</PackageId>
-    <Version>1.0.0</Version>
+    <Version>8.0.0</Version>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <PackageDescription>Get Configuration from Environment Variables or AWS SSM Parameter Store</PackageDescription>
     <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
@@ -20,7 +20,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Amazon.AspNetCore.DataProtection.SSM" Version="2.1.0" />
+    <PackageReference Include="Amazon.AspNetCore.DataProtection.SSM" Version="3.2.0" />
   </ItemGroup>
 
 </Project>
