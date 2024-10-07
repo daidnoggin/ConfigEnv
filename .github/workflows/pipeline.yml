@@ -25,7 +25,7 @@ jobs:
       - name: Build
         run: |
           export RELEASE_VERSION="${{ env.NBGV_SemVer2 }}"
-          docker-compose build --progress plain pack
+          docker compose build --progress plain pack
 
       - name: Create Artifact
         run: |
@@ -45,7 +45,7 @@ jobs:
       - uses: actions/checkout@v2
       - name: Unit Test
         run: |
-          docker-compose build --progress plain unittest
+          docker compose build --progress plain unittest
 
   release:
     needs: [build, test]
