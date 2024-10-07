@@ -30,6 +30,7 @@ jobs:
       - name: Create Artifact
         run: |
           export RELEASE_VERSION="${{ env.NBGV_SemVer2 }}"
+          docker ps -a
           docker create -ti --name configenv configenv_pack bash
           docker cp configenv:/build/ConfigEnv/bin/Release/ConfigEnv.${RELEASE_VERSION}.nupkg ConfigEnv.${RELEASE_VERSION}.nupkg
           docker rm configenv
