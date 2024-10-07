@@ -20,7 +20,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Amazon.AspNetCore.DataProtection.SSM" Version="3.2.0" />
+    <PackageReference Include="Amazon.AspNetCore.DataProtection.SSM" Version="3.2.1" />
   </ItemGroup>
 
 </Project>
