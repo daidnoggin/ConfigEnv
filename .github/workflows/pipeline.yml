@@ -22,7 +22,7 @@ jobs:
           setAllVars: true
           setCommonVars: true
 
-      - name: Build
+      - name: Build and pack
         run: |
           export RELEASE_VERSION="${{ env.NBGV_SemVer2 }}"
           docker compose build --progress plain pack
@@ -30,7 +30,7 @@ jobs:
       - name: Create Artifact
         run: |
           export RELEASE_VERSION="${{ env.NBGV_SemVer2 }}"
-          docker create -ti --name configenv configenv_pack bash
+          docker create -ti --name configenv "configenv-pack" bash
           docker cp configenv:/build/ConfigEnv/bin/Release/ConfigEnv.${RELEASE_VERSION}.nupkg ConfigEnv.${RELEASE_VERSION}.nupkg
           docker rm configenv
 
